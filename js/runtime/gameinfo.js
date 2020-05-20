@@ -7,12 +7,26 @@ atlas.src = 'images/Common.png'
 let mine = new Image()
 mine.src = 'images/mineOut.png'
 
+var passTime = 0
+var startTime = 0
+var performance = wx.getPerformance()
+
 export default class GameInfo {
   renderGameScore(ctx, score) {
     ctx.drawImage(mine, 10, 130, 30, 30)
     ctx.fillStyle = "#ffffff"
     ctx.font      = "30px Arial"
     ctx.fillText(score,60,155)
+  }
+
+  renderTime(ctx) {
+    if (startTime == 0) {
+      startTime = performance.now()
+    }
+    ctx.fillStyle = "#ffffff"
+    ctx.font      = "30px Arial"
+    var time = (performance.now() - startTime) / 1000
+    ctx.fillText(parseInt(time),20,55)
   }
 
   renderGameOver(ctx, score) {

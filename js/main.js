@@ -2,6 +2,7 @@ import GameInfo from './runtime/gameinfo'
 import GameConfig from './base/gameconfig'
 import GameUtils from './base/gameutils'
 import Button from './base/button'
+import Time from './runtime/time'
 
 let ctx = canvas.getContext('2d')
 
@@ -28,6 +29,8 @@ export default class Main {
     )
     this.bindLoop = this.loop.bind(this)
     this.gameinfo = new GameInfo()
+    this.time = new Time()
+    this.time.start()
     this.mines = this.gameutils.initMine()
     this.mines = this.gameutils.generateMine(this.mines)
     window.cancelAnimationFrame(this.aniId);
@@ -45,8 +48,10 @@ export default class Main {
     ctx.fillRect(0, 0, this.gameconfig.width, this.gameconfig.height)
     this.renderAllMine()
     this.display.show(ctx, 20 , this.gameconfig.height-100 , 120 , 50)
-    this.makeTag.show(ctx, this.gameconfig.width -140, this.gameconfig.height - 100, 120, 50)
+    this.makeTag.show(ctx, this.gameconfig.width - 140, this.gameconfig.height - 100, 120, 50)
     this.gameinfo.renderGameScore(ctx, this.gameutils.flagNum(this.mines))
+    this.time.renderTime(ctx)
+    this.time.renderBtn(ctx, this.gameconfig.width - 100 , 100 , 50 , 50)
     if (this.gameutils.isWin(this.mines)) {
       this.finish = true
       this.gameinfo.renderGameOver(ctx, 0)
@@ -132,6 +137,25 @@ export default class Main {
         this.flag = true
         this.display.setImage('images/button_unselected_display.png')
         this.makeTag.setImage('images/button_make_flag.png')
+      }
+    }).bind(this))
+
+    canvas.addEventListener('touchstart', ((e) => {
+      if (this.finish) {
+        return
+      }
+      e.preventDefault()
+      let x = e.touches[0].clientX
+      let y = e.touches[0].clientY
+
+      let timeArea = this.time.btnArea
+
+      if (timeArea != null && x >= timeArea.startX
+        && x <= timeArea.endX
+        && y >= timeArea.startY
+        && y <= timeArea.endY) {
+          console.log('!!!!!!!!!!!!!')
+          this.time.keep()
       }
     }).bind(this))
   }
