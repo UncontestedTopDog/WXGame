@@ -90,8 +90,11 @@ export default class Main {
       if (this.mines[x][y].reveal)
         return
       if (this.flag) {
-        this.mines[x][y].setFlag()
+        this.mines[x][y].setState()
       } else {
+        if (this.mines[x][y].state == 1) {
+          return
+        }
         if (this.mines[x][y].isMine) {
           this.mines[x][y].show()
           this.finish = true

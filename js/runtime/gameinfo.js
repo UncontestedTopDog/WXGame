@@ -4,15 +4,15 @@ const screenHeight = window.innerHeight
 let atlas = new Image()
 atlas.src = 'images/Common.png'
 
+let mine = new Image()
+mine.src = 'images/mineOut.png'
+
 export default class GameInfo {
   renderGameScore(ctx, score) {
+    ctx.drawImage(mine, 10, 130, 30, 30)
     ctx.fillStyle = "#ffffff"
-    ctx.font      = "20px Arial"
-    ctx.fillText(
-      score,
-      10,
-      30
-    )
+    ctx.font      = "30px Arial"
+    ctx.fillText(score,60,155)
   }
 
   renderGameOver(ctx, score) {

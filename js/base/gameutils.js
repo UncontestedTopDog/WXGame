@@ -125,7 +125,7 @@ export default class GameUtils {
     var flag = 0
     for (var x = 0; x < this.gameconfig.xTotal; x++) {
       for (var y = 0; y < this.gameconfig.yTotal; y++) {
-        if (mines[x][y].isFlag) {
+        if (mines[x][y].state == 1) {
           flag++
         }
       }

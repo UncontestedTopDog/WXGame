@@ -22,7 +22,7 @@ export default class Mine {
     this.mineNum = 0
     this.isMine = false
     this.reveal = false
-    this.isFlag = false
+    this.state = 0    //0 正常， 1 插旗， 2疑问
   }
 
    /**
@@ -49,14 +49,24 @@ export default class Mine {
     }
   }
 
-  setFlag() {
-    if (!this.isFlag) {
-      this.isFlag = !this.isFlag
+  setState() {
+    this.state++
+    this.state = this.state % 3
+    if (this.state == 0) {
+      this.img.src = INITIAL
+    } else if (this.state == 1) {
       this.img.src = FLAG
     } else {
-      this.isFlag = !this.isFlag
-      this.img.src = INITIAL
+      this.img.src = QUESTION
     }
+
+    // if (!this.isFlag) {
+    //   this.isFlag = !this.isFlag
+    //   this.img.src = FLAG
+    // } else {
+    //   this.isFlag = !this.isFlag
+    //   this.img.src = INITIAL
+    // }
   }
 
   isNoMineAround() {
