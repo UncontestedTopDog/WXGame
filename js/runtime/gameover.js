@@ -12,11 +12,11 @@ var startTime = 0
 var performance = wx.getPerformance()
 
 export default class GameInfo {
-  renderGameScore(ctx, score) {
-    ctx.drawImage(mine, 10, 130, 30, 30)
+  renderFlagNum(ctx, flagNum, x, y) {
+    ctx.drawImage(mine, x, y, 30, 30)
     ctx.fillStyle = "#ffffff"
     ctx.font      = "30px Arial"
-    ctx.fillText(score,60,155)
+    ctx.fillText(flagNum, x + 50, y + 25)
   }
 
   renderTime(ctx) {

@@ -52,6 +52,7 @@ export default class Mine {
   setState() {
     this.state++
     this.state = this.state % 3
+    console.log(this.state)
     if (this.state == 0) {
       this.img.src = INITIAL
     } else if (this.state == 1) {
@@ -59,14 +60,6 @@ export default class Mine {
     } else {
       this.img.src = QUESTION
     }
-
-    // if (!this.isFlag) {
-    //   this.isFlag = !this.isFlag
-    //   this.img.src = FLAG
-    // } else {
-    //   this.isFlag = !this.isFlag
-    //   this.img.src = INITIAL
-    // }
   }
 
   isNoMineAround() {

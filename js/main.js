@@ -1,39 +1,42 @@
-import GameInfo from './runtime/gameinfo'
+import GameOver from './runtime/gameover'
 import GameConfig from './base/gameconfig'
-import GameUtils from './base/gameutils'
+import MineUtils from './base/mineutils'
 import Button from './base/button'
 import Time from './runtime/time'
 
 let ctx = canvas.getContext('2d')
+var gameConfig = new GameConfig()
+var gameOver = new GameOver()
+var mineUtils = new MineUtils()
+var displayBtn = new Button('images/button_display.png')
+var makeTagBtn = new Button('images/button_unselected_make_flag.png')
+var time = new Time()
+
+var firstFrame = true
+var end = false
+var pattern = 0 //0 挖雷， 1 插旗
 
 /**
  * 游戏主函数
  */
 export default class Main {
   constructor() {
-    this.gameconfig = new GameConfig()
-    this.gameutils = new GameUtils()
-    this.display = new Button('images/button_display.png')
-    this.makeTag = new Button('images/button_unselected_make_flag.png')
-    this.touchHandler = this.touchEventHandler.bind(this)
+    this.finishHandler = this.finishEventHandler.bind(this)
+    this.gameHandler = this.gameEventHandler.bind(this)
+    this.btnHandler = this.btnEventHandler.bind(this)
+    this.timeHandler = this.timeEventHandler.bind(this)
     this.aniId = 0
-    this.initEvent()
     this.restart()
   }
   restart() {
-    this.finish = false
-    this.flag = false
-    canvas.removeEventListener(
-      'touchstart',
-      this.touchHandler
-    )
+    firstFrame = true
+    end = false
+    pattern = 0
+    time.start()
+    this.mines = mineUtils.initMine()
+    this.mines = mineUtils.generateMine(this.mines)
     this.bindLoop = this.loop.bind(this)
-    this.gameinfo = new GameInfo()
-    this.time = new Time()
-    this.time.start()
-    this.mines = this.gameutils.initMine()
-    this.mines = this.gameutils.generateMine(this.mines)
-    window.cancelAnimationFrame(this.aniId);
+    window.cancelAnimationFrame(this.aniId)
     this.aniId = window.requestAnimationFrame(
       this.bindLoop, canvas)
   }
@@ -45,28 +48,41 @@ export default class Main {
   render() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     ctx.fillStyle = "#123321"
-    ctx.fillRect(0, 0, this.gameconfig.width, this.gameconfig.height)
+    ctx.fillRect(0, 0, gameConfig.width, gameConfig.height)
     this.renderAllMine()
-    this.display.show(ctx, 20 , this.gameconfig.height-100 , 120 , 50)
-    this.makeTag.show(ctx, this.gameconfig.width - 140, this.gameconfig.height - 100, 120, 50)
-    this.gameinfo.renderGameScore(ctx, this.gameutils.flagNum(this.mines))
-    this.time.renderTime(ctx)
-    this.time.renderBtn(ctx, this.gameconfig.width - 100 , 100 , 50 , 50)
-    if (this.gameutils.isWin(this.mines)) {
-      this.finish = true
-      this.gameinfo.renderGameOver(ctx, 0)
-      canvas.addEventListener('touchstart', this.touchHandler)
+    displayBtn.show(ctx, gameConfig.width - 140, gameConfig.height - 100 , 120 , 50)
+    makeTagBtn.show(ctx, gameConfig.width - 140, gameConfig.height - 50, 120, 50)
+    gameOver.renderFlagNum(ctx, mineUtils.flagNum(this.mines), 50 , 125)
+    time.renderTime(ctx, 50, 55)
+    time.renderBtn(ctx, gameConfig.width - 105, gameConfig.height - 150 , 50 , 50)
+    if (firstFrame) {
+      canvas.addEventListener('touchstart', this.gameHandler)
+      canvas.addEventListener('touchstart', this.btnHandler)
+      canvas.addEventListener('touchstart', this.timeHandler)
+      canvas.removeEventListener('touchstart', this.finishHandler)
+      firstFrame = false
+    }
+    if (mineUtils.isWin(this.mines)) {
+      end = true
+      gameOver.renderGameOver(ctx, 0)
+      canvas.addEventListener('touchstart', this.finishHandler)
+      canvas.removeEventListener('touchstart', this.gameHandler)
+      canvas.removeEventListener('touchstart', this.btnHandler)
+      canvas.removeEventListener('touchstart', this.timeHandler)
     } else {
-      if (this.finish) {
-        this.gameinfo.renderGameOver(ctx, 0)
-        canvas.addEventListener('touchstart', this.touchHandler)
+      if (end) {
+        gameOver.renderGameOver(ctx, 0)
+        canvas.addEventListener('touchstart', this.finishHandler)
+        canvas.removeEventListener('touchstart', this.gameHandler)
+        canvas.removeEventListener('touchstart', this.btnHandler)
+        canvas.removeEventListener('touchstart', this.timeHandler)
       }
     }
   }
 
   renderAllMine() {
-    for (var x = 0; x < this.gameconfig.xTotal; x++) {
-      for (var y = 0; y < this.gameconfig.yTotal; y++) {
+    for (var x = 0; x < gameConfig.xTotal; x++) {
+      for (var y = 0; y < gameConfig.yTotal; y++) {
         this.mines[x][y].drawToCanvas(ctx)
       }
     }
@@ -79,102 +95,82 @@ export default class Main {
       this.bindLoop, canvas)
   }
 
-  initEvent() {
-    canvas.addEventListener('touchstart', ((e) => {
-      if (this.finish) {
-        return
-      }
-      e.preventDefault()
-      let touchX = e.touches[0].clientX
-      let touchY = e.touches[0].clientY
-      let x = parseInt(touchX / this.gameconfig.size)
-      let y = parseInt((touchY - this.gameconfig.startY) / this.gameconfig.size)
-      if (!this.gameutils.isInGame(x, y)) {
-        return
-      }
-      if (this.mines[x][y].reveal)
-        return
-      if (this.flag) {
-        this.mines[x][y].setState()
-      } else {
-        if (this.mines[x][y].state == 1) {
-          return
-        }
-        if (this.mines[x][y].isMine) {
-          this.mines[x][y].show()
-          this.finish = true
-          return
-        }
-        this.mines[x][y].show()
-        if (this.mines[x][y].isNoMineAround()) {
-          this.gameutils.showAroundMine(this.mines, x, y)
-        }
-      }       
-    }).bind(this))
-
-    canvas.addEventListener('touchstart', ((e) => {
-      if (this.finish) {
-        return
-      }
-      e.preventDefault()
-      let x = e.touches[0].clientX
-      let y = e.touches[0].clientY
-
-      let displayArea = this.display.btnArea
-      let makeTagArea = this.makeTag.btnArea
-
-      if (displayArea != null && x >= displayArea.startX
-        && x <= displayArea.endX
-        && y >= displayArea.startY
-        && y <= displayArea.endY) {
-        this.flag = false
-        this.display.setImage('images/button_display.png')
-        this.makeTag.setImage('images/button_unselected_make_flag.png')
-      } else if (makeTagArea != null && x >= makeTagArea.startX
-        && x <= makeTagArea.endX
-        && y >= makeTagArea.startY
-        && y <= makeTagArea.endY) {
-        this.flag = true
-        this.display.setImage('images/button_unselected_display.png')
-        this.makeTag.setImage('images/button_make_flag.png')
-      }
-    }).bind(this))
-
-    canvas.addEventListener('touchstart', ((e) => {
-      if (this.finish) {
-        return
-      }
-      e.preventDefault()
-      let x = e.touches[0].clientX
-      let y = e.touches[0].clientY
-
-      let timeArea = this.time.btnArea
-
-      if (timeArea != null && x >= timeArea.startX
-        && x <= timeArea.endX
-        && y >= timeArea.startY
-        && y <= timeArea.endY) {
-          console.log('!!!!!!!!!!!!!')
-          this.time.keep()
-      }
-    }).bind(this))
-  }
-
-  touchEventHandler(e) {
-    if (!this.finish) {
+  finishEventHandler(e) {
+    if (!end) {
       return
     }
     e.preventDefault()
+    if (mineUtils.isPointInArea(gameOver.btnArea,
+      e.touches[0].clientX, e.touches[0].clientY)) {
+        this.restart()
+    }
+ }
 
+ timeEventHandler(e) {
+   if (end) {
+     return
+   }
+   e.preventDefault()
+   if (mineUtils.isPointInArea(time.btnArea, 
+        e.touches[0].clientX, e.touches[0].clientY)) {
+     time.keep()
+   }
+ }
+
+ btnEventHandler(e) {
+   if (end) {
+     return
+   }
+   e.preventDefault()
    let x = e.touches[0].clientX
    let y = e.touches[0].clientY
 
-   let area = this.gameinfo.btnArea
+   let displayArea = displayBtn.btnArea
+   let makeTagArea = makeTagBtn.btnArea
 
-   if (area != null &&   x >= area.startX
-       && x <= area.endX
-       && y >= area.startY
-       && y <= area.endY  )
-     this.restart()
+   if (mineUtils.isPointInArea(displayBtn.btnArea,x,y)) {
+     pattern = 0
+     displayBtn.setImage('images/button_display.png')
+     makeTagBtn.setImage('images/button_unselected_make_flag.png')
+   } else if (mineUtils.isPointInArea(makeTagBtn.btnArea, x, y)) {
+     pattern = 1
+     displayBtn.setImage('images/button_unselected_display.png')
+     makeTagBtn.setImage('images/button_make_flag.png')
+   }
  }
+
+ gameEventHandler(e) {
+   if (end) {
+     return
+   }
+   e.preventDefault()
+   let touchX = e.touches[0].clientX
+   let touchY = e.touches[0].clientY
+   let x = parseInt((touchX - gameConfig.startX) / gameConfig.size)
+   let y = parseInt((touchY - gameConfig.startY) / gameConfig.size)
+   if (!mineUtils.isInGame(x, y)) {
+     return
+   }
+   if (this.mines[x][y].reveal) {
+     return
+   }
+   if (pattern == 1) {
+     console.log(x+"   "+y)
+     this.mines[x][y].setState()
+   } else {
+     if (this.mines[x][y].state == 1) {
+       return
+     }
+     if (this.mines[x][y].isMine) {
+       this.mines[x][y].show()
+       end = true
+       return
+     }
+     this.mines[x][y].show()
+     if (this.mines[x][y].isNoMineAround()) {
+       mineUtils.showAroundMine(this.mines, x, y)
+     }
+   } 
+ }
+
 }

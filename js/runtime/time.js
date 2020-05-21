@@ -5,19 +5,28 @@ var performance = wx.getPerformance()
 const START = 'images/start.png'
 const PAUSE = 'images/pause.png'
 var keep = true
+let time = new Image()
+time.src = 'images/time.png'
 
 export default class Time {
   constructor() {
     this.image = new Image()
     this.image.src = START
   }
-  renderTime(ctx) {
-    if (startTime == 0) {
-      startTime = performance.now()
-    }
+  // renderTime(ctx,x,y) {
+  //   if (startTime == 0) {
+  //     startTime = performance.now()
+  //   }
+  //   ctx.fillStyle = "#ffffff"
+  //   ctx.font      = "30px Arial"
+  //   ctx.fillText(parseInt(this.getTime()),x,y)
+  // }
+
+  renderTime(ctx, x, y) {
+    ctx.drawImage(time, x, y, 30, 30)
     ctx.fillStyle = "#ffffff"
     ctx.font      = "30px Arial"
-    ctx.fillText(parseInt(this.getTime()),20,55)
+    ctx.fillText(parseInt(this.getTime()), x + 50, y + 25)
   }
 
   start() {

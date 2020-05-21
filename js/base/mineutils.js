@@ -1,7 +1,7 @@
 import GameConfig from '../base/gameconfig'
 import Mine from '../mine/mine'
 
-export default class GameUtils {
+export default class MineUtils {
   constructor() {
     this.gameconfig = new GameConfig()
   }
@@ -9,29 +9,29 @@ export default class GameUtils {
   isInGame(x, y) {
     if (x < 0 || x >= this.gameconfig.xTotal ||
       y < 0 || y >= this.gameconfig.yTotal) {
-        return false
-   }
-   return true
+      return false
+    }
+    return true
   }
 
-  randomNum(minNum,maxNum){ 
-    switch(arguments.length){ 
-      case 1: 
-        return parseInt(Math.random()*minNum+1,10); 
-      case 2: 
-        return parseInt(Math.random()*(maxNum-minNum+1)+minNum,10); 
-      default: 
-        return 0; 
-    } 
-  } 
+  randomNum(minNum, maxNum) {
+    switch (arguments.length) {
+      case 1:
+        return parseInt(Math.random() * minNum + 1, 10);
+      case 2:
+        return parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10);
+      default:
+        return 0;
+    }
+  }
 
   initMine() {
     var mines = new Array()
     for (var x = 0; x < this.gameconfig.xTotal; x++) {
       mines[x] = new Array();
       for (var y = 0; y < this.gameconfig.yTotal; y++) {
-        mines[x][y] = new Mine(this.gameconfig.startX + x * this.gameconfig.size, 
-        this.gameconfig.startY + y * this.gameconfig.size);
+        mines[x][y] = new Mine(this.gameconfig.startX + x * this.gameconfig.size,
+          this.gameconfig.startY + y * this.gameconfig.size);
       }
     }
     return mines
@@ -49,7 +49,7 @@ export default class GameUtils {
     }
     for (var x = 0; x < this.gameconfig.xTotal; x++) {
       for (var y = 0; y < this.gameconfig.yTotal; y++) {
-          this.calculateAround(mines, x, y)
+        this.calculateAround(mines, x, y)
       }
     }
     return mines
@@ -58,9 +58,9 @@ export default class GameUtils {
   calculateAround(mines, x, y) {
     var mineNum = 0
     if (mines[x][y].isMine) {
-        return
+      return
     }
-    for (var i = x - 1; i <= x + 1 ; i++) {
+    for (var i = x - 1; i <= x + 1; i++) {
       for (var j = y - 1; j <= y + 1; j++) {
         if (this.isMine(mines, i, j)) {
           mineNum++
@@ -72,19 +72,19 @@ export default class GameUtils {
 
   isMine(mines, x, y) {
     if (!this.isInGame(x, y))
-    return false
+      return false
     if (mines[x][y].isMine) {
-        return true
+      return true
     } else {
-        return false
+      return false
     }
   }
 
   showMine(mines, x, y) {
     if (!this.isInGame(x, y)) {
-         return
+      return
     }
-    if (mines[x][y].isNoMineAround() ) {
+    if (mines[x][y].isNoMineAround()) {
       if (!mines[x][y].reveal) {
         mines[x][y].show()
         this.showAroundMine(mines, x, y)
@@ -96,14 +96,14 @@ export default class GameUtils {
   }
 
   showAroundMine(mines, x, y) {
-    this.showMine(mines, x-1, y-1)
-    this.showMine(mines, x-1, y)
-    this.showMine(mines, x-1, y+1)
-    this.showMine(mines, x+1, y-1)
-    this.showMine(mines, x+1, y)
-    this.showMine(mines, x+1, y+1)
-    this.showMine(mines, x, y-1)
-    this.showMine(mines, x, y+1)
+    this.showMine(mines, x - 1, y - 1)
+    this.showMine(mines, x - 1, y)
+    this.showMine(mines, x - 1, y + 1)
+    this.showMine(mines, x + 1, y - 1)
+    this.showMine(mines, x + 1, y)
+    this.showMine(mines, x + 1, y + 1)
+    this.showMine(mines, x, y - 1)
+    this.showMine(mines, x, y + 1)
   }
 
   isWin(mines) {
@@ -133,12 +133,12 @@ export default class GameUtils {
     return flag
   }
 
-  isPointInArea(area,x,y) {
-    if (area != null && x >= area.startX && x <= area.endX 
-        && y >= area.startY && y <= area.endY) {
-        return true
-      }
-      return false
+  isPointInArea(area, x, y) {
+    if (area != null && x >= area.startX && x <= area.endX
+      && y >= area.startY && y <= area.endY) {
+      return true
+    }
+    return false
   }
 
 
