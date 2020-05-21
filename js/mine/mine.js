@@ -1,4 +1,4 @@
-import GameConfig from '../base/gameconfig'
+import GameConfig from '../runtime/gameconfig'
 
 // 玩家相关常量设置
 const INITIAL = 'images/initial.png'

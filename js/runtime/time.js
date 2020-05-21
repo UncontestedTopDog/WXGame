@@ -1,3 +1,6 @@
+import GameConfig from '../runtime/gameconfig'
+var gameConfig = new GameConfig()
+
 var passTime = 0
 var startTime = 0
 var performance = wx.getPerformance()
@@ -13,20 +16,14 @@ export default class Time {
     this.image = new Image()
     this.image.src = START
   }
-  // renderTime(ctx,x,y) {
-  //   if (startTime == 0) {
-  //     startTime = performance.now()
-  //   }
-  //   ctx.fillStyle = "#ffffff"
-  //   ctx.font      = "30px Arial"
-  //   ctx.fillText(parseInt(this.getTime()),x,y)
-  // }
 
   renderTime(ctx, x, y) {
-    ctx.drawImage(time, x, y, 30, 30)
+    ctx.drawImage(time, gameConfig.timeX, gameConfig.timeY,
+      gameConfig.timeSize, gameConfig.timeSize)
     ctx.fillStyle = "#ffffff"
     ctx.font      = "30px Arial"
-    ctx.fillText(parseInt(this.getTime()), x + 50, y + 25)
+    ctx.fillText(parseInt(this.getTime()), gameConfig.timeTxtX ,
+     gameConfig.timeTxtY )
   }
 
   start() {
@@ -63,13 +60,13 @@ export default class Time {
     }
   }
 
-  renderBtn(ctx, x, y, width, height) {
-    ctx.drawImage(this.image, x, y, width, height)
+  renderBtn(ctx) {
+    ctx.drawImage(this.image, gameConfig.timeBtnX , gameConfig.timeBtnY , gameConfig.timeBtnSize, gameConfig.timeBtnSize)
     this.btnArea = {
-      startX: x,
-      startY: y,
-      endX  : x + width,
-      endY  : y + height
+      startX: gameConfig.timeBtnX,
+      startY: gameConfig.timeBtnY,
+      endX  : gameConfig.timeBtnX + gameConfig.timeBtnSize,
+      endY  : gameConfig.timeBtnY + gameConfig.timeBtnSize
     }
   }
 }

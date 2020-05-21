@@ -1,5 +1,5 @@
 import GameOver from './runtime/gameover'
-import GameConfig from './base/gameconfig'
+import GameConfig from './runtime/gameconfig'
 import MineUtils from './base/mineutils'
 import Button from './base/button'
 import Time from './runtime/time'
@@ -54,7 +54,9 @@ export default class Main {
     makeTagBtn.show(ctx, gameConfig.width - 140, gameConfig.height - 50, 120, 50)
     gameOver.renderFlagNum(ctx, mineUtils.flagNum(this.mines), 50 , 125)
     time.renderTime(ctx, 50, 55)
-    time.renderBtn(ctx, gameConfig.width - 105, gameConfig.height - 150 , 50 , 50)
+    // time.renderBtn(ctx, gameConfig.width - 105, gameConfig.height - 150 , 50 , 50)
+    time.renderBtn(ctx)
+
     if (firstFrame) {
       canvas.addEventListener('touchstart', this.gameHandler)
       canvas.addEventListener('touchstart', this.btnHandler)
@@ -88,7 +90,6 @@ export default class Main {
     }
   }
 
-  // 实现游戏帧循环
   loop() {
     this.render()
     this.aniId = window.requestAnimationFrame(
@@ -124,10 +125,6 @@ export default class Main {
    e.preventDefault()
    let x = e.touches[0].clientX
    let y = e.touches[0].clientY
-
-   let displayArea = displayBtn.btnArea
-   let makeTagArea = makeTagBtn.btnArea
-
    if (mineUtils.isPointInArea(displayBtn.btnArea,x,y)) {
      pattern = 0
      displayBtn.setImage('images/button_display.png')
@@ -155,7 +152,6 @@ export default class Main {
      return
    }
    if (pattern == 1) {
-     console.log(x+"   "+y)
      this.mines[x][y].setState()
    } else {
      if (this.mines[x][y].state == 1) {
@@ -172,5 +168,4 @@ export default class Main {
      }
    } 
  }
-
 }

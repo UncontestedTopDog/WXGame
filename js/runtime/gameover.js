@@ -1,3 +1,5 @@
+import GameConfig from '../runtime/gameconfig'
+var gameConfig = new GameConfig()
 const screenWidth  = window.innerWidth
 const screenHeight = window.innerHeight
 
@@ -13,10 +15,11 @@ var performance = wx.getPerformance()
 
 export default class GameInfo {
   renderFlagNum(ctx, flagNum, x, y) {
-    ctx.drawImage(mine, x, y, 30, 30)
+    ctx.drawImage(mine, gameConfig.flagX, gameConfig.flagY, gameConfig.flagSize, gameConfig.flagSize)
     ctx.fillStyle = "#ffffff"
     ctx.font      = "30px Arial"
-    ctx.fillText(flagNum, x + 50, y + 25)
+    ctx.fillText(flagNum, gameConfig.flagTxtX ,
+     gameConfig.flagTxtY )
   }
 
   renderTime(ctx) {

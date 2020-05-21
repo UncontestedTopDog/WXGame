@@ -1,4 +1,4 @@
-import GameConfig from '../base/gameconfig'
+import GameConfig from '../runtime/gameconfig'
 import Mine from '../mine/mine'
 
 export default class MineUtils {
