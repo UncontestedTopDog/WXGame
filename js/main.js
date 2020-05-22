@@ -47,11 +47,33 @@ export default class Main {
    */
   render() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
-    ctx.fillStyle = "#123321"
+    ctx.fillStyle = "#81FFEF"
     ctx.fillRect(0, 0, gameConfig.width, gameConfig.height)
+    let grd = ctx.createLinearGradient(gameConfig.width/2, 0, gameConfig.width/2, 120)
+    grd.addColorStop(0, '#ABDCFF')
+    grd.addColorStop(1, '#0396FF')
+    ctx.fillStyle = grd
+    ctx.fillRect(0, 0, gameConfig.width, 120)
+
+    let grd2 = ctx.createLinearGradient(gameConfig.width/2, gameConfig.height - 100, gameConfig.width/2, gameConfig.height)
+    grd2.addColorStop(0, '#0396FF')
+    grd2.addColorStop(1, '#ABDCFF')
+    ctx.fillStyle = grd2
+    ctx.fillRect(0, gameConfig.height - 100, gameConfig.width, gameConfig.height)
+    // ctx.fillStyle = '#ABDCFF'
+    // ctx.fillRect(0, 0, gameConfig.width, 99)
+    // ctx.fillStyle = '#123456'
+    // ctx.beginPath()
+    // ctx.moveTo(0,100)
+    // ctx.lineTo(gameConfig.width, 100)
+    // ctx.stroke()
+
+    // ctx.fillStyle = '#ABDCFF'
+    // ctx.fillRect(0, gameConfig.height - 100, gameConfig.width, gameConfig.height)
+
     this.renderAllMine()
-    displayBtn.show(ctx, 20, gameConfig.height - 100 , 120 , 50)
-    makeTagBtn.show(ctx, gameConfig.width - 140, gameConfig.height - 100, 120, 50)
+    displayBtn.show(ctx, 20, gameConfig.height - 80 , 120 , 50)
+    makeTagBtn.show(ctx, gameConfig.width - 140, gameConfig.height - 80, 120, 50)
     gameOver.renderFlagNum(ctx, mineUtils.flagNum(this.mines), 50 , 125)
     time.renderTime(ctx, 50, 55)
     // time.renderBtn(ctx, gameConfig.width - 105, gameConfig.height - 150 , 50 , 50)
@@ -158,6 +180,11 @@ export default class Main {
      return
    }
    if (pattern == 1) {
+    if (this.mines[x][y].state == 0) {
+      if (mineUtils.flagNum(this.mines) == 0) {
+        return
+      }
+    }
      this.mines[x][y].setState()
    } else {
      if (this.mines[x][y].state == 1) {

@@ -7,7 +7,7 @@ let atlas = new Image()
 atlas.src = 'images/Common.png'
 
 let mine = new Image()
-mine.src = 'images/mineOut.png'
+mine.src = 'images/mine-set.png'
 
 var passTime = 0
 var startTime = 0
