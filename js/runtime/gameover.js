@@ -32,20 +32,20 @@ export default class GameInfo {
     ctx.fillText(parseInt(time),20,55)
   }
 
-  renderGameOver(ctx, score) {
+  renderGameOver(ctx,txt, time) {
     ctx.drawImage(atlas, 0, 0, 119, 108, screenWidth / 2 - 150, screenHeight / 2 - 100, 300, 300)
 
     ctx.fillStyle = "#ffffff"
     ctx.font    = "20px Arial"
 
     ctx.fillText(
-      '游戏结束',
+      txt,
       screenWidth / 2 - 40,
       screenHeight / 2 - 100 + 50
     )
 
     ctx.fillText(
-      '得分: ' + score,
+      '时长: ' + time,
       screenWidth / 2 - 40,
       screenHeight / 2 - 100 + 130
     )

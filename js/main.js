@@ -50,13 +50,12 @@ export default class Main {
     ctx.fillStyle = "#123321"
     ctx.fillRect(0, 0, gameConfig.width, gameConfig.height)
     this.renderAllMine()
-    displayBtn.show(ctx, gameConfig.width - 140, gameConfig.height - 100 , 120 , 50)
-    makeTagBtn.show(ctx, gameConfig.width - 140, gameConfig.height - 50, 120, 50)
+    displayBtn.show(ctx, 20, gameConfig.height - 100 , 120 , 50)
+    makeTagBtn.show(ctx, gameConfig.width - 140, gameConfig.height - 100, 120, 50)
     gameOver.renderFlagNum(ctx, mineUtils.flagNum(this.mines), 50 , 125)
     time.renderTime(ctx, 50, 55)
     // time.renderBtn(ctx, gameConfig.width - 105, gameConfig.height - 150 , 50 , 50)
     time.renderBtn(ctx)
-
     if (firstFrame) {
       canvas.addEventListener('touchstart', this.gameHandler)
       canvas.addEventListener('touchstart', this.btnHandler)
@@ -66,14 +65,16 @@ export default class Main {
     }
     if (mineUtils.isWin(this.mines)) {
       end = true
-      gameOver.renderGameOver(ctx, 0)
+      time.stop()
+      gameOver.renderGameOver(ctx, '游戏胜利', parseInt(time.getTime())/100)
       canvas.addEventListener('touchstart', this.finishHandler)
       canvas.removeEventListener('touchstart', this.gameHandler)
       canvas.removeEventListener('touchstart', this.btnHandler)
       canvas.removeEventListener('touchstart', this.timeHandler)
     } else {
       if (end) {
-        gameOver.renderGameOver(ctx, 0)
+        time.stop()
+        gameOver.renderGameOver(ctx, '游戏失败', parseInt(time.getTime())/100)
         canvas.addEventListener('touchstart', this.finishHandler)
         canvas.removeEventListener('touchstart', this.gameHandler)
         canvas.removeEventListener('touchstart', this.btnHandler)
@@ -114,7 +115,12 @@ export default class Main {
    e.preventDefault()
    if (mineUtils.isPointInArea(time.btnArea, 
         e.touches[0].clientX, e.touches[0].clientY)) {
-     time.keep()
+          console.log('!!!!'+time.keep)
+     if(time.keep) {
+       time.pause()
+     } else {
+       time.resume()
+     }
    }
  }
 
@@ -137,7 +143,7 @@ export default class Main {
  }
 
  gameEventHandler(e) {
-   if (end) {
+   if (end || !time.keep) {
      return
    }
    e.preventDefault()

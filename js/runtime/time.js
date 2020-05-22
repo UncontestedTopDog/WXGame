@@ -7,7 +7,7 @@ var performance = wx.getPerformance()
 // var image = new Image()
 const START = 'images/start.png'
 const PAUSE = 'images/pause.png'
-var keep = true
+
 let time = new Image()
 time.src = 'images/time.png'
 
@@ -15,14 +15,15 @@ export default class Time {
   constructor() {
     this.image = new Image()
     this.image.src = START
+    this.keep = true
   }
 
   renderTime(ctx, x, y) {
     ctx.drawImage(time, gameConfig.timeX, gameConfig.timeY,
       gameConfig.timeSize, gameConfig.timeSize)
     ctx.fillStyle = "#ffffff"
-    ctx.font      = "30px Arial"
-    ctx.fillText(parseInt(this.getTime()), gameConfig.timeTxtX ,
+    ctx.font      = "25px Arial"
+    ctx.fillText(parseInt(this.getTime())/100, gameConfig.timeTxtX ,
      gameConfig.timeTxtY )
   }
 
@@ -30,33 +31,34 @@ export default class Time {
     this.image.src = PAUSE
     passTime = 0
     startTime = performance.now()
-    keep = true
-  }
-
-  keep() {
-    if (keep) {
-      this.pause()
-    } else {
-      this.resume()
-    }
-    keep = !keep
+    this.keep = true
   }
 
   pause() {
     this.image.src = START
     passTime += performance.now() - startTime
+    this.keep = false
   }
 
   resume() {
     this.image.src = PAUSE
     startTime = performance.now()
+    this.keep = true
   }
 
+  stop() {
+    if (!this.keep)
+    return 
+    this.image.src = START
+    passTime += performance.now() - startTime
+    this.keep = false
+  }
+  
   getTime() {
-    if (keep) {
-      return (passTime + (performance.now() - startTime)) / 1000
+    if (this.keep) {
+      return (passTime + (performance.now() - startTime)) / 10
     } else {
-      return passTime / 1000
+      return passTime / 10
     }
   }
 

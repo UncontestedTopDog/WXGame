@@ -1,6 +1,6 @@
-const MINETOTAL = 10
+const MINETOTAL = 20
 const XTOTAL = 9
-const YTOTAL = 9
+const YTOTAL = 12
 const SCREENWIDTH    = window.innerWidth
 const SCREENHEIGHT   = window.innerHeight
 
