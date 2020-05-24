@@ -3,6 +3,7 @@ import GameConfig from './runtime/gameconfig'
 import MineUtils from './base/mineutils'
 import Button from './base/button'
 import Time from './runtime/time'
+import Music from './runtime/music'
 
 let ctx = canvas.getContext('2d')
 var gameConfig = new GameConfig()
@@ -11,6 +12,7 @@ var mineUtils = new MineUtils()
 var displayBtn = new Button('images/button_display.png')
 var makeTagBtn = new Button('images/button_unselected_make_flag.png')
 var time = new Time()
+var music = new Music()
 
 var firstFrame = true
 var end = false
@@ -25,8 +27,10 @@ export default class Main {
     this.gameHandler = this.gameEventHandler.bind(this)
     this.btnHandler = this.btnEventHandler.bind(this)
     this.timeHandler = this.timeEventHandler.bind(this)
+    this.keepHandler = this.keepEventHandler.bind(this)
     this.aniId = 0
     this.restart()
+    music.playBgm()
   }
   restart() {
     firstFrame = true
@@ -101,6 +105,13 @@ export default class Main {
         canvas.removeEventListener('touchstart', this.gameHandler)
         canvas.removeEventListener('touchstart', this.btnHandler)
         canvas.removeEventListener('touchstart', this.timeHandler)
+      } else {
+        if (!time.keep) {
+          gameOver.renderGamePause(ctx)
+          canvas.addEventListener('touchstart', this.keepHandler)
+        } else {
+          canvas.removeEventListener('touchstart', this.keepHandler)
+        }
       }
     }
   }
@@ -137,11 +148,12 @@ export default class Main {
    e.preventDefault()
    if (mineUtils.isPointInArea(time.btnArea, 
         e.touches[0].clientX, e.touches[0].clientY)) {
-          console.log('!!!!'+time.keep)
      if(time.keep) {
        time.pause()
+       music.pauseBgm()
      } else {
        time.resume()
+       music.playBgm()
      }
    }
  }
@@ -163,6 +175,17 @@ export default class Main {
      makeTagBtn.setImage('images/button_make_flag.png')
    }
  }
+
+ keepEventHandler(e) {
+  if (end) {
+    return
+  }
+  e.preventDefault()
+  if (mineUtils.isPointInArea(gameOver.keepArea,
+    e.touches[0].clientX,e.touches[0].clientY)) {
+    time.resume()
+  }
+}
 
  gameEventHandler(e) {
    if (end || !time.keep) {
@@ -193,6 +216,8 @@ export default class Main {
      if (this.mines[x][y].isMine) {
        this.mines[x][y].show()
        end = true
+       this.mines = mineUtils.allMineShow(this.mines)
+       music.playExplosion()
        return
      }
      this.mines[x][y].show()

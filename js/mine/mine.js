@@ -4,9 +4,9 @@ import GameConfig from '../runtime/gameconfig'
 const INITIAL = 'images/initial.png'
 const FLAG = 'images/flag.png'
 const QUESTION = 'images/question.png'
-const EXPLODE = 'images/explode.png'
+const EXPLODE = 'images/mines/mine_expl.png'
 
-const imgs = new Array('images/mine_zero.png','images/mine_one.png','images/mine_two.png','images/mine_three.png','images/mine_four.png','images/mine_five.png','images/mine_six.png','images/mine_seven.png','images/mine_eight.png')
+const imgs = new Array('images/mines/mine_zero.png','images/mines/mine_one.png','images/mines/mine_two.png','images/mines/mine_three.png','images/mines/mine_four.png','images/mines/mine_five.png','images/mines/mine_six.png','images/mines/mine_seven.png','images/mines/mine_eight.png')
 
 
 export default class Mine {
@@ -31,10 +31,10 @@ export default class Mine {
   drawToCanvas(ctx) {
     ctx.drawImage(
       this.img,
-      this.x,
-      this.y,
-      this.width,
-      this.height
+      this.x+1,
+      this.y+1,
+      this.width-2,
+      this.height-2
     )
   }
 

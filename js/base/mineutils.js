@@ -141,6 +141,17 @@ export default class MineUtils {
     return false
   }
 
+  allMineShow(mines) {
+    for (var x = 0; x < gameConfig.xTotal; x++) {
+      for (var y = 0; y < gameConfig.yTotal; y++) {
+        if (mines[x][y].isMine) {
+          mines[x][y].show()
+        }
+      }
+    }
+    return mines
+  }
+
 
 
 
