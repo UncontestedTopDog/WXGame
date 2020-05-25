@@ -30,7 +30,7 @@ export default class Main {
     this.keepHandler = this.keepEventHandler.bind(this)
     this.aniId = 0
     this.restart()
-    music.playBgm()
+    // music.playBgm()
   }
   restart() {
     firstFrame = true
@@ -150,10 +150,10 @@ export default class Main {
         e.touches[0].clientX, e.touches[0].clientY)) {
      if(time.keep) {
        time.pause()
-       music.pauseBgm()
+      //  music.pauseBgm()
      } else {
        time.resume()
-       music.playBgm()
+      //  music.playBgm()
      }
    }
  }

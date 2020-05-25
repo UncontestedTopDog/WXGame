@@ -125,7 +125,7 @@ export default class MineUtils {
     var flag = 0
     for (var x = 0; x < gameConfig.xTotal; x++) {
       for (var y = 0; y < gameConfig.yTotal; y++) {
-        if (mines[x][y].state == 1) {
+        if (mines[x][y].state == 1 && !mines[x][y].reveal) {
           flag++
         }
       }

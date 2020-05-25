@@ -1,4 +1,6 @@
 import GameConfig from '../runtime/gameconfig'
+import Music from '../runtime/music'
+var music = new Music()
 var gameConfig = new GameConfig()
 
 var passTime = 0
@@ -32,18 +34,21 @@ export default class Time {
     passTime = 0
     startTime = performance.now()
     this.keep = true
+    music.playBgm()
   }
 
   pause() {
     this.image.src = START
     passTime += performance.now() - startTime
     this.keep = false
+    music.pauseBgm()
   }
 
   resume() {
     this.image.src = PAUSE
     startTime = performance.now()
     this.keep = true
+    music.playBgm()
   }
 
   stop() {
@@ -52,6 +57,7 @@ export default class Time {
     this.image.src = START
     passTime += performance.now() - startTime
     this.keep = false
+    music.pauseBgm()
   }
   
   getTime() {
