@@ -26,7 +26,7 @@ export default class GameConfig {
     // this.timeY = this.startY /2  - this.width / 15
     // this.timeSize = 2 * this.width / 15
     this.timeX = 120
-    this.timeY = 70
+    this.timeY = 65
     this.timeSize = 40
 
     // this.timeTxtX = this.width * 13 / 30

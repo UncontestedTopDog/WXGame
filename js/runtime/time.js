@@ -20,7 +20,7 @@ export default class Time {
 
   renderTime(ctx, x, y) {
     ctx.drawImage(time, gameConfig.timeX, gameConfig.timeY,
-      gameConfig.timeSize, gameConfig.timeSize)
+      gameConfig.timeSize, gameConfig.timeSize * 1.18)
     ctx.fillStyle = "#ffffff"
     ctx.font      = "25px Arial"
     ctx.fillText(parseInt(this.getTime())/100, gameConfig.timeTxtX ,

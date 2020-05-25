@@ -1,9 +1,9 @@
 import GameConfig from '../runtime/gameconfig'
 
 // 玩家相关常量设置
-const INITIAL = 'images/initial.png'
-const FLAG = 'images/flag.png'
-const QUESTION = 'images/question.png'
+const INITIAL = 'images/mines/mine_initial.png'
+const FLAG = 'images/mines/mine_flag.png'
+const QUESTION = 'images/mines/mine_question.png'
 const EXPLODE = 'images/mines/mine_expl.png'
 
 const imgs = new Array('images/mines/mine_zero.png','images/mines/mine_one.png','images/mines/mine_two.png','images/mines/mine_three.png','images/mines/mine_four.png','images/mines/mine_five.png','images/mines/mine_six.png','images/mines/mine_seven.png','images/mines/mine_eight.png')
