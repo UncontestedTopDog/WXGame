@@ -45,5 +45,8 @@ export default class GameConfig {
     // this.flagTxtY = this.startY / 2 + 15
     this.flagTxtX = this.width - 60
     this.flagTxtY = 100
+
+    this.topHeight = 120
+    this.bottomHeight = 100
   }
 }

@@ -1,5 +1,6 @@
 import GameOver from './runtime/gameover'
 import GameConfig from './runtime/gameconfig'
+import GameBaseView from './runtime/gamebaseview'
 import MineUtils from './base/mineutils'
 import Button from './base/button'
 import Time from './runtime/time'
@@ -8,6 +9,7 @@ import Music from './runtime/music'
 let ctx = canvas.getContext('2d')
 var gameConfig = new GameConfig()
 var gameOver = new GameOver()
+var gameBaseView = new GameBaseView()
 var mineUtils = new MineUtils()
 var displayBtn = new Button('images/button_display.png')
 var makeTagBtn = new Button('images/button_unselected_make_flag.png')
@@ -30,7 +32,6 @@ export default class Main {
     this.keepHandler = this.keepEventHandler.bind(this)
     this.aniId = 0
     this.restart()
-    // music.playBgm()
   }
   restart() {
     firstFrame = true
@@ -53,17 +54,19 @@ export default class Main {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     ctx.fillStyle = "#81FFEF"
     ctx.fillRect(0, 0, gameConfig.width, gameConfig.height)
-    let grd = ctx.createLinearGradient(gameConfig.width/2, 0, gameConfig.width/2, 120)
-    grd.addColorStop(0, '#ABDCFF')
-    grd.addColorStop(1, '#0396FF')
-    ctx.fillStyle = grd
-    ctx.fillRect(0, 0, gameConfig.width, 120)
+    gameBaseView.renderTop(ctx)
+    gameBaseView.renderBottom(ctx)
+    // let grd = ctx.createLinearGradient(gameConfig.width/2, 0, gameConfig.width/2, 120)
+    // grd.addColorStop(0, '#ABDCFF')
+    // grd.addColorStop(1, '#0396FF')
+    // ctx.fillStyle = grd
+    // ctx.fillRect(0, 0, gameConfig.width, 120)
 
-    let grd2 = ctx.createLinearGradient(gameConfig.width/2, gameConfig.height - 100, gameConfig.width/2, gameConfig.height)
-    grd2.addColorStop(0, '#0396FF')
-    grd2.addColorStop(1, '#ABDCFF')
-    ctx.fillStyle = grd2
-    ctx.fillRect(0, gameConfig.height - 100, gameConfig.width, gameConfig.height)
+    // let grd2 = ctx.createLinearGradient(gameConfig.width/2, gameConfig.height - 100, gameConfig.width/2, gameConfig.height)
+    // grd2.addColorStop(0, '#0396FF')
+    // grd2.addColorStop(1, '#ABDCFF')
+    // ctx.fillStyle = grd2
+    // ctx.fillRect(0, gameConfig.height - 100, gameConfig.width, gameConfig.height)
     // ctx.fillStyle = '#ABDCFF'
     // ctx.fillRect(0, 0, gameConfig.width, 99)
     // ctx.fillStyle = '#123456'
@@ -150,10 +153,8 @@ export default class Main {
         e.touches[0].clientX, e.touches[0].clientY)) {
      if(time.keep) {
        time.pause()
-      //  music.pauseBgm()
      } else {
        time.resume()
-      //  music.playBgm()
      }
    }
  }

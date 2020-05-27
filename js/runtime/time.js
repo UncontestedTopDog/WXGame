@@ -30,6 +30,7 @@ export default class Time {
   }
 
   start() {
+    console.error('!!!!!!!!!!!!start')
     this.image.src = PAUSE
     passTime = 0
     startTime = performance.now()
@@ -38,6 +39,7 @@ export default class Time {
   }
 
   pause() {
+    console.error('!!!!!!!!!!!!pause')
     this.image.src = START
     passTime += performance.now() - startTime
     this.keep = false
@@ -45,6 +47,7 @@ export default class Time {
   }
 
   resume() {
+    console.error('!!!!!!!!!!!!resume')
     this.image.src = PAUSE
     startTime = performance.now()
     this.keep = true
@@ -54,6 +57,7 @@ export default class Time {
   stop() {
     if (!this.keep)
     return 
+    console.error('!!!!!!!!!!!!stop')
     this.image.src = START
     passTime += performance.now() - startTime
     this.keep = false
